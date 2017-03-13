@@ -2,6 +2,7 @@ import urllib
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+import os.path
 
 urls = ["http://www.bbc.co.uk/sport/football/scottish-championship/table?print=true",
         "http://www.bbc.co.uk/sport/football/scottish-league-one/table?print=true",
@@ -43,7 +44,16 @@ for url in urls:
     # Return HTML table
     df.to_html(filename, index=False)
 
-    current_url += 1
+    if current_url == 0:
+        filename = "tables/championship.html"
+    elif current_url == 1:
+        filename = "tables/league-one.html"
+    elif current_url == 2:
+        filename = "tables/league-two.html"
 
-    #print column_headers
-    #print team_data
+    if os.path.exists(filename):
+        os.remove(filename)
+
+    df.to_html(filename, index=False)
+
+    current_url += 1
