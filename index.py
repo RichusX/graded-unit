@@ -10,7 +10,7 @@ urls = (
     '/login', 'login',
     '/logout', 'logout'
 )
-globalVars = {'subscriber': True}
+globalVars = {'subscriber': False}
 
 class index:
     def __init__(self):
@@ -23,6 +23,7 @@ class league_tables:
     def __init__(self):
         self.render = web.template.render('templates/', base='layout', globals=globalVars)
     def GET(self):
+        #updateTables.getTables()
         return self.render.tables()
 
 class player_statistics:
@@ -48,4 +49,6 @@ class logout:
 if __name__ == "__main__":
     app = web.application(urls, globals())
     web.config.degub = True
+    updateTables.getTables()
+    updateTables.mergeHTML()
     app.run()

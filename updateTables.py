@@ -9,8 +9,7 @@ urls = ["http://www.bbc.co.uk/sport/football/scottish-championship/table?print=t
         "http://www.bbc.co.uk/sport/football/scottish-league-two/table?print=true"]
 
 def getTables():
-    date = str(datetime.now().strftime("%Y%m%d-%H%M"))
-
+    date = str(datetime.now().strftime("%Y%m%d-%H%M%S"))
     current_url = 0
 
     for url in urls:
@@ -54,9 +53,42 @@ def getTables():
         if os.path.exists(filename):
             os.remove(filename)
 
-        df.to_html(filename, index=False)
-
+        df.to_html(filename, index=False, classes='table')
+        #print ""
+        #print df.head(10)
         current_url += 1
+        
+
+def mergeHTML():
+    timestamp = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+    # Make sure the file doesn't already exist
+    if os.path.exists('templates/tables.html'):
+        os.remove('templates/tables.html')
+
+    # Merge all 3 HTML files into one
+    tm = open('templates/tables.html', 'a')
+    t1 = open('tables/championship.html')
+    t2 = open('tables/league-one.html')
+    t3 = open('tables/league-two.html')
+
+    tm.write("$var title: Sports League\n$var css: static/css/bootstrap.min.css static/css/sportsleague.css static/font-awesome/css/font-awesome.min.css\n")
+
+    tm.write("<br><h2>Championship League</h2>")
+    for line in t1.readlines():
+        tm.write(line)
+    t1.close()
+    tm.write("<br><h2>League One</h2>")
+    for line in t2.readlines():
+        tm.write(line)
+    t2.close()
+    tm.write("<br><h2>League Two</h2>")
+    for line in t3.readlines():
+        tm.write(line)
+    t3.close()
+    tm.write("<br>Last Updated: %s" % (timestamp))
+    tm.close()
 
 if __name__ == "__main__":
     getTables()
+    mergeHTML()
