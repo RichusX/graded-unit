@@ -1,2 +1,2 @@
-# graded-unit
-HND Software Development Y2 - Graded Unit
+# Graded Unit
+HND Software Development Y2
