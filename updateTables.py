@@ -1,8 +1,11 @@
+#!/usr/bin/python
+
 import urllib
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
 import os.path
+import time
 
 urls = ["http://www.bbc.co.uk/sport/football/scottish-championship/table?print=true",
         "http://www.bbc.co.uk/sport/football/scottish-league-one/table?print=true",
@@ -34,43 +37,42 @@ def getTables():
 
         # Pick a filename depending on the URL we're scraping
         if current_url == 0:
-            filename = "tables/archive/championship_%s.html" % (date)
+            filename = "/home/richusx/graded-unit/tables/archive/championship_%s.html" % (date)
         elif current_url == 1:
-            filename = "tables/archive/league-one_%s.html" % (date)
+            filename = "/home/richusx/graded-unit/tables/archive/league-one_%s.html" % (date)
         elif current_url == 2:
-            filename = "tables/archive/league-two_%s.html" % (date)
+            filename = "/home/richusx/graded-unit/tables/archive/league-two_%s.html" % (date)
 
         # Return HTML table
         df.to_html(filename, index=False)
 
         if current_url == 0:
-            filename = "tables/championship.html"
+            filename = "/home/richusx/graded-unit/tables/championship.html"
         elif current_url == 1:
-            filename = "tables/league-one.html"
+            filename = "/home/richusx/graded-unit/tables/league-one.html"
         elif current_url == 2:
-            filename = "tables/league-two.html"
+            filename = "/home/richusx/graded-unit/tables/league-two.html"
 
         if os.path.exists(filename):
             os.remove(filename)
 
-        df.to_html(filename, index=False, classes='table')
+        df.to_html(filename, index=False, classes='table table-striped table-bordered')
         #print ""
         #print df.head(10)
         current_url += 1
-        
 
 def mergeHTML():
     timestamp = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     # Make sure the file doesn't already exist
-    if os.path.exists('templates/tables.html'):
-        os.remove('templates/tables.html')
+    if os.path.exists('/home/richusx/graded-unit/templates/tables.html'):
+        os.remove('/home/richusx/graded-unit/templates/tables.html')
 
     # Merge all 3 HTML files into one
-    tm = open('templates/tables.html', 'a')
-    t1 = open('tables/championship.html')
-    t2 = open('tables/league-one.html')
-    t3 = open('tables/league-two.html')
+    tm = open('/home/richusx/graded-unit/templates/tables.html', 'a')
+    t1 = open('/home/richusx/graded-unit/tables/championship.html')
+    t2 = open('/home/richusx/graded-unit/tables/league-one.html')
+    t3 = open('/home/richusx/graded-unit/tables/league-two.html')
 
     tm.write("$var title: Sports League\n$var css: static/css/bootstrap.min.css static/css/sportsleague.css static/font-awesome/css/font-awesome.min.css\n")
 
@@ -86,7 +88,7 @@ def mergeHTML():
     for line in t3.readlines():
         tm.write(line)
     t3.close()
-    tm.write("<br>Last Updated: %s" % (timestamp))
+    tm.write("<br>Last Updated: %s<br><i>Tables get updated automatically every 2 hours</i>" % (timestamp))
     tm.close()
 
 if __name__ == "__main__":
