@@ -96,12 +96,13 @@ class register:
     def POST(self):
         fullname, username, email, passwd, subscription, junior = web.input().fullname, web.input().username, web.input().email, web.input().passwd, web.input().subscription, web.input().junior
         try:
-            ident = db.insert('users', fullname='$fullname', username='$username', email='$email', passwd=auth.generateHash('$passwd'), salt=auth.getSalt(), privilege='$subscription', junior='$junior', vars=locals())
-        except:
+            ident = db.insert("users", fullname="$fullname", username="$username", email="$email", passwd=auth.generateHash("$passwd"), salt=auth.getSalt(), privilege="$subscription", child="$junior", vars=locals())
             render = create_render(session.privilege)
-            return render.register_error() 
-        render = create_render(session.privilege)
-        return render.register_ok()
+            return render.register_ok()
+        except Exception, e:
+            return '%s' % (e)
+            #render = create_render(session.privilege)
+            #return render.register_error() 
 
 #------------------------------------------------------
 
