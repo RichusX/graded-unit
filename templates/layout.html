@@ -39,11 +39,11 @@ $def with (content)
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">Home</a></li>
                     <li><a href="/tables">League Tables</a></li>
-                    $if subscriber == True:
-                      <li><a href="/stats">Player Statistics</a></li>
-                      <li><a href="/logout">Log out</a></li>
-                    $else:
-                      <li><a href="/login">Log in / Register</a></li>
+                    $#if subscriber == True:
+                    <li><a href="/stats">Player Statistics</a></li>
+                    <li><a href="/logout">Log out</a></li>
+                    $#else:
+                    <li><a href="/login">Log in / Register</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
