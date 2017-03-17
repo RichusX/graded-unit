@@ -2,6 +2,7 @@
 import web
 import updateTables
 import hashlib
+import auth
 
 web.config.debug = False
 
@@ -11,7 +12,8 @@ urls = (
     '/tables', 'league_tables',
     '/stats', 'player_statistics',
     '/login', 'login',
-    '/logout', 'logout'
+    '/logout', 'logout',
+    '/register', 'register'
 )
 globalVars = {'subscriber': False}
 
@@ -19,7 +21,7 @@ app = web.application(urls, locals())
 db = web.database(host='localhost', dbn='mysql', db='sportsleague', user='sportsleague', pw='FH9Y9iaVZuBRmYoF')
 
 store = web.session.DiskStore('sessions')
-session = web.session.Session(app, store, initializer={'login': 0, 'privilege': 0})
+session = web.session.Session(app, store, initializer={'login': 0, 'privilege': 0, 'junior': 0})
 
 #-------------------- PAGE CLASSES --------------------
 
@@ -61,6 +63,7 @@ class login:
             if hashlib.sha1(passwd).hexdigest() == ident['pass']:
                 session.login = 1
                 session.privilege = ident['privilege']
+                session.junior = ident['child']
                 render = create_render(session.privilege)
                 return render.login_ok()
             else:
@@ -80,6 +83,26 @@ class logout:
         session.kill()
         render = create_render(session.privilege)
         return render.index()
+
+class register:
+    def GET(self):
+        if logged():
+            render = create_render(session.privilege)
+            return '%s' % render.index()
+        else:
+            render = create_render(session.privilege)
+            return '%s' % render.register()
+
+    def POST(self):
+        fullname, username, email, passwd, subscription, junior = web.input().fullname, web.input().username, web.input().email, web.input().passwd, web.input().subscription, web.input().junior
+        try:
+            ident = db.insert('users', fullname='$fullname', username='$username', email='$email', passwd=auth.generateHash('$passwd'), salt=auth.getSalt(), privilege='$subscription', junior='$junior', vars=locals())
+        except:
+            render = create_render(session.privilege)
+            return render.register_error() 
+        render = create_render(session.privilege)
+        return render.register_ok()
+
 #------------------------------------------------------
 
 def logged():
@@ -90,13 +113,13 @@ def logged():
 
 def create_render(privilege):
         if logged():
-            if privilege == 0:
+            if privilege == 0: # Registered - No subscription
                 render = web.template.render('templates/', base='layout')
-            elif privilege == 1:
+            elif privilege == 1: # Partial subscription
                 render = web.template.render('templates/', base='layout')
-            elif privilege == 2:
+            elif privilege == 2: # Full subscription
                 render = web.template.render('templates/', base='layout')
-            else:
+            else: # Guest
                 render = web.template.render('templates/', base='layout')
         else:
             render = web.template.render('templates', base='layout')
