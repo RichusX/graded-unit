@@ -82,7 +82,7 @@ def mergeHTML():
     t2 = open('app/tables/league-one.html')
     t3 = open('app/tables/league-two.html')
 
-    tm.write("{%% extends \"base.html\" %%} {%% block content %%}\n")
+    tm.write("{% extends \"base.html\" %} {% block content %}\n")
 
     tm.write("<br><h2>Championship League</h2>")
     for line in t1.readlines():
