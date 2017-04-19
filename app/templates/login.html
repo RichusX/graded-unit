@@ -3,6 +3,9 @@
 
 <div class="row">
     <div class="col-lg-12">
+        {% if data %}
+            <br><div class="alert alert-danger">{{data}}</div>
+        {% endif %}
         <h1 class="page-header">Login</h1>
     </div>
 </div>
@@ -10,31 +13,34 @@
 </div>
 <div class="col-lg-6">
 	<div class="row">
+
+    {% if session['logged_in'] %}
+      <div class="alert alert-danger"><strong>Error!</strong> You are already logged in.</div>
+    {% else %}
+
 		<form class="form-horizontal" action="" method="POST" name="login">
-      {{ form.hidden_tag() }}
 			<fieldset>
 				<div class="form-group">
 					<label for="user" class="control-label col-sm-2">Username</label>
 					<div class="col-sm-8">
-						{{ form.username(size=49) }}
+						<input type="text" class="form-control" name="username">
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label for="passwd" class="control-label col-sm-2">Password</label>
 					<div class="col-sm-8">
-						{{ form.password(size=49) }}
+						<input type="password" class="form-control" name="password">
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label class="control-label col-sm-2" for="LOGIN"></label>
 					<div class="text-right col-sm-9">
-						<button type="submit" value="Log In" class="btn btn-primary" aria-label="">Login</button>
+						<button type="submit" value="Log in" class="btn btn-primary" aria-label="">Log in</button>
 					</div>
 				</div>
 			</fieldset>
 		</form>
+    {% endif %}
 	</div>
 </div>
 {% endblock %}
