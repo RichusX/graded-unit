@@ -1,9 +1,6 @@
 from flask import Flask, url_for, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_recaptcha import ReCaptcha
 from app import app
-
-recaptcha = ReCaptcha(app=app, )
 
 db = SQLAlchemy(app)
 
@@ -57,8 +54,10 @@ def login():
         password = request.form['password']
         try:
             data = User.query.filter_by(username = username, password = password).first()
+            print (data)
             if data is not None:
                 session['logged_in'] = True
+                session['subscription'] = data.subscription
                 return render_template('index.html', data="Login Successful!")
             else:
                 return render_template('login.html', data="Login Failed. Please try again!")  #redirect(url_for('login'), data = "Login Failed. Please try again!")
@@ -69,17 +68,19 @@ def login():
 def register():
     """Register Form"""
     if request.method == 'POST':
-        if recaptcha.verify():
-            data = User.query.filter_by(username = request.form['username']).first()
-            if data is None:
+        data = User.query.filter_by(username = request.form['username']).first()
+        if data is None:
+            try:
+                junior = request.form['junior']
+                if junior is not None:
+                    new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = request.form['password'], subscription = request.form['subscription'], junior = "False")
+            except:
                 new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = request.form['password'], subscription = request.form['subscription'], junior = request.form['junior'])
-                db.session.add(new_user)
-                db.session.commit()
-                return redirect('/login')
-            else:
-                return render_template('register.html', data="Username already taken. Please choose a different one.")
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect('/login')
         else:
-            return render_template('register.html', data="ReCaptcha invalid.")
+            return render_template('register.html', data="Username already taken. Please choose a different one.")
     return render_template('register.html')
 
 @app.route('/logout')

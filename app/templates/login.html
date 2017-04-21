@@ -10,12 +10,15 @@
     </div>
 </div>
 <div class="col-lg-6">
+    <div class="row">
+        <h4 style="display: inline;">Don't have an account? Click <a href="/register">here</a> to register.</h4>
+    </div>
 </div>
 <div class="col-lg-6">
 	<div class="row">
 
     {% if session['logged_in'] %}
-      <div class="alert alert-danger"><strong>Error!</strong> You are already logged in.</div>
+      <div class="alert alert-danger"><strong>Error!</strong> You are already logged in.</div><br>
     {% else %}
 
 		<form class="form-horizontal" action="" method="POST" name="login">
@@ -33,9 +36,8 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label col-sm-2" for="LOGIN"></label>
-					<div class="text-right col-sm-9">
-						<button type="submit" value="Log in" class="btn btn-primary" aria-label="">Log in</button>
+					<div class="text-right col-sm-10">
+						<button type="submit" value="Log in" class="btn btn-success" aria-label="">Log in</button>
 					</div>
 				</div>
 			</fieldset>
