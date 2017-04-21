@@ -37,21 +37,21 @@ def getTables():
 
         # Pick a filename depending on the URL we're scraping
         if current_url == 0:
-            filename = "/home/richusx/graded-unit/tables/archive/championship_%s.html" % (date)
+            filename = "/home/richusx/graded-unit/app/tables/archive/championship_%s.html" % (date)
         elif current_url == 1:
-            filename = "/home/richusx/graded-unit/tables/archive/league-one_%s.html" % (date)
+            filename = "/home/richusx/graded-unit/app/tables/archive/league-one_%s.html" % (date)
         elif current_url == 2:
-            filename = "/home/richusx/graded-unit/tables/archive/league-two_%s.html" % (date)
+            filename = "/home/richusx/graded-unit/app/tables/archive/league-two_%s.html" % (date)
 
         # Return HTML table
         df.to_html(filename, index=False)
 
         if current_url == 0:
-            filename = "/home/richusx/graded-unit/tables/championship.html"
+            filename = "/home/richusx/graded-unit/app/tables/championship.html"
         elif current_url == 1:
-            filename = "/home/richusx/graded-unit/tables/league-one.html"
+            filename = "/home/richusx/graded-unit/app/tables/league-one.html"
         elif current_url == 2:
-            filename = "/home/richusx/graded-unit/tables/league-two.html"
+            filename = "/home/richusx/graded-unit/app/tables/league-two.html"
 
         if os.path.exists(filename):
             os.remove(filename)
@@ -65,16 +65,16 @@ def mergeHTML():
     timestamp = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     # Make sure the file doesn't already exist
-    if os.path.exists('/home/richusx/graded-unit/templates/tables.html'):
-        os.remove('/home/richusx/graded-unit/templates/tables.html')
+    if os.path.exists('/home/richusx/graded-unit/app/templates/tables.html'):
+        os.remove('/home/richusx/graded-unit/app/templates/tables.html')
 
     # Merge all 3 HTML files into one
-    tm = open('/home/richusx/graded-unit/templates/tables.html', 'a')
-    t1 = open('/home/richusx/graded-unit/tables/championship.html')
-    t2 = open('/home/richusx/graded-unit/tables/league-one.html')
-    t3 = open('/home/richusx/graded-unit/tables/league-two.html')
+    tm = open('/home/richusx/graded-unit/app/templates/tables.html', 'a')
+    t1 = open('/home/richusx/graded-unit/app/tables/championship.html')
+    t2 = open('/home/richusx/graded-unit/app/tables/league-one.html')
+    t3 = open('/home/richusx/graded-unit/app/tables/league-two.html')
 
-    tm.write("$var title: Sports League\n$var css: static/css/bootstrap.min.css static/css/sportsleague.css static/font-awesome/css/font-awesome.min.css\n")
+    tm.write('{% extends "base.html" %}\n{% block content %}')
 
     tm.write("<br><h2>Championship League</h2>")
     for line in t1.readlines():
@@ -88,7 +88,7 @@ def mergeHTML():
     for line in t3.readlines():
         tm.write(line)
     t3.close()
-    tm.write("<br>Last Updated: %s<br><i>Tables get updated automatically every 2 hours</i>" % (timestamp))
+    tm.write("<br>Last Updated: %s<br><i>Tables get updated automatically every 2 hours</i>\n{%% endblock %%}" % (timestamp))
     tm.close()
 
 if __name__ == "__main__":
