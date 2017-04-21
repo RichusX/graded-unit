@@ -10,15 +10,28 @@ body {
 }
 
 .player {
-    
+    height: 300px;
+    margin-bottom: 40px;
 }
 
 .player h3 {
     margin-left: 20px;
 }
 
-.player-image {
-    max-height: 150px;
+.player .photo img{
+    max-height: 250px;
+    margin-left: -12px;
+    margin-top: 5px;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.player .info {
+
+}
+
+.player .info-table {
+
 }
 
 .img-portfolio {

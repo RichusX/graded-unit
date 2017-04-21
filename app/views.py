@@ -6,11 +6,12 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
+    __tablename__ = 'users'
     """ Create user table """
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key = True)
     fullname = db.Column(db.String(64))
     email = db.Column(db.String(64))
-    username = db.Column(db.String(64), unique=True)
+    username = db.Column(db.String(64), unique = True)
     password = db.Column(db.String(64))
     subscription = db.Column(db.Integer)
     junior = db.Column(db.String(5))
@@ -24,6 +25,30 @@ class User(db.Model):
         self.subscription = int(subscription)
         self.junior = junior
 
+class Player(db.Model):
+    __tablename__ = 'players'
+    id = db.Column(db.Integer, primary_key = True)
+    number = db.Column(db.Integer)
+    name = db.Column(db.String())
+    dob = db.Column(db.String())
+    info = db.Column(db.String())
+    sponsor = db.Column(db.String())
+    previousclub = db.Column(db.String())
+    yearsigned = db.Column(db.Integer)
+    position = db.Column(db.String())
+    imageurl = db.Column(db.String())
+
+    def __init__(self, id, number, name, dob, info, sponsor, previousclub, yearsigned, position, imageurl):
+        self.id = id
+        self.number = number
+        self.name = name
+        self.dob = dob
+        self.info = info
+        self.sponsor = sponsor
+        self.previousclub = previousclub
+        self.yearsigned = yearsigned
+        self.position = position
+        self.imageurl = imageurl
 
 @app.route('/')
 @app.route('/index')
@@ -40,9 +65,10 @@ def index():
 def tables():
     return render_template('tables.html')
 
-@app.route('/stats')
-def stats():
-    return render_template('stats.html')
+@app.route('/players')
+def players():
+    info = Player.query.all()
+    return render_template('players.html', data=info)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -87,4 +113,5 @@ def register():
 def logout():
     """Logout Form"""
     session['logged_in'] = False
+    session['subscription'] = 0
     return redirect('/')

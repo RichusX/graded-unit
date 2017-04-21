@@ -39,8 +39,10 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">Home</a></li>
-                    <li><a href="/tables">League Tables</a></li>
-                    <li><a href="/stats">Player Statistics</a></li>
+                    {% if session.subscription == 1 or session.subscription == 2 %}
+                        <li><a href="/tables">League Tables</a></li>
+                        <li><a href="/players">Player Information</a></li>
+                    {% endif %}
                     {% if not session.logged_in %}
                         <li><a href="/login">Log in</a></li>
                     {% else %}
