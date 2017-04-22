@@ -49,11 +49,15 @@ class Player(db.Model):
         self.position = position
         self.imageurl = imageurl
 
+def fixSubscription():
+    if "subscription" not in session:
+        session["subscription"] = 0
+
+
 @app.route('/')
 @app.route('/index')
 def index():
-    if "subscription" not in session:
-        session["subscription"] = 0
+    fixSubscription()
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
@@ -64,15 +68,18 @@ def index():
 
 @app.route('/tables')
 def tables():
+    fixSubscription()
     return render_template('tables.html')
 
 @app.route('/players')
 def players():
+    fixSubscription()
     info = Player.query.all()
     return render_template('players.html', data=info)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    fixSubscription()
     """Login Form"""
     if request.method == 'GET':
         return render_template('login.html')
@@ -93,6 +100,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    fixSubscription()
     """Register Form"""
     if request.method == 'POST':
         data = User.query.filter_by(username = request.form['username']).first()
