@@ -4,7 +4,6 @@ from app import app
 
 db = SQLAlchemy(app)
 
-
 class User(db.Model):
     __tablename__ = 'users'
     """ Create user table """
@@ -53,6 +52,8 @@ class Player(db.Model):
 @app.route('/')
 @app.route('/index')
 def index():
+    if "subscription" not in session:
+        session["subscription"] = 0
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
