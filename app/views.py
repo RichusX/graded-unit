@@ -1,5 +1,6 @@
 from flask import Flask, url_for, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
+import auth
 from app import app
 
 db = SQLAlchemy(app)
@@ -84,19 +85,19 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     else:
-        username = request.form['username']
-        password = request.form['password']
-        try:
-            data = User.query.filter_by(username = username, password = password).first()
-            print (data)
-            if data is not None:
+        try: # Try to retreive password hash
+            username = request.form['username']
+            user = User.query.filter_by(username = username).first()
+            print (user.password)
+            if auth.check_pw(request.form['password'], user.password):
+                print("in if")
                 session['logged_in'] = True
-                session['subscription'] = data.subscription
+                session['subscription'] = user.subscription
                 return render_template('index.html', data="Login Successful!")
             else:
-                return render_template('login.html', data="Login Failed. Please try again!")  #redirect(url_for('login'), data = "Login Failed. Please try again!")
-        except:
-            return render_template('login.html', data="Critical error. Please contact the webmaster at me@richusx.me")#redirect(url_for('login'), data = "Critical error. Please contact the webmaster at me@richusx.me")
+                return render_template('login.html', data="Login Failed. Please try again!")
+        except: # If fails to retreive password hash, display error message.
+            return render_template('login.html', data="Critical error. Please contact the webmaster at me@richusx.me")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -105,12 +106,13 @@ def register():
     if request.method == 'POST':
         data = User.query.filter_by(username = request.form['username']).first()
         if data is None:
-            try:
+            pw_hash = auth.salt_pw(request.form['password'])
+            try: # If junior checkbox is not ticked then write to db junior = False
                 junior = request.form['junior']
                 if junior is not None:
-                    new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = request.form['password'], subscription = request.form['subscription'], junior = "False")
-            except:
-                new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = request.form['password'], subscription = request.form['subscription'], junior = request.form['junior'])
+                    new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = pw_hash, subscription = request.form['subscription'], junior = "False")
+            except: # Else write to db that junior = True
+                new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = pw_hash, subscription = request.form['subscription'], junior = request.form['junior'])
             db.session.add(new_user)
             db.session.commit()
             return redirect('/login')
