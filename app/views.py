@@ -16,7 +16,6 @@ class User(db.Model):
     subscription = db.Column(db.Integer)
     junior = db.Column(db.String(5))
 
-
     def __init__(self, fullname, email, username, password, subscription, junior):
         self.fullname = fullname
         self.email = email
@@ -50,15 +49,21 @@ class Player(db.Model):
         self.position = position
         self.imageurl = imageurl
 
-def fixSubscription():
-    if "subscription" not in session:
-        session["subscription"] = 0
+def setSessionVariables():
+    if 'subscription' not in session:
+        session['subscription'] = 0
+    if 'junior' not in session:
+        session['junior'] = False
 
+def resetSessionVariables():
+    session['logged_in'] = False
+    session['subscription'] = 0
+    session['junior'] = False
 
 @app.route('/')
 @app.route('/index')
-def index():
-    fixSubscription()
+def index(): # Index page (Homepage)
+    setSessionVariables()
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
@@ -68,20 +73,19 @@ def index():
     return render_template('index.html')
 
 @app.route('/tables')
-def tables():
-    fixSubscription()
+def tables(): # Championship Table page
+    setSessionVariables()
     return render_template('tables.html')
 
 @app.route('/players')
-def players():
-    fixSubscription()
+def players(): # Player Info Page
+    setSessionVariables()
     info = Player.query.all()
     return render_template('players.html', data=info)
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
-    fixSubscription()
-    """Login Form"""
+def login(): # Login Page
+    setSessionVariables()
     if request.method == 'GET':
         return render_template('login.html')
     else:
@@ -89,20 +93,22 @@ def login():
             username = request.form['username']
             user = User.query.filter_by(username = username).first()
             print (user.password)
-            if auth.check_pw(request.form['password'], user.password):
-                print("in if")
+            if auth.check_pw(request.form['password'], user.password): # If login is successful, set session variables and forward user to homepage
                 session['logged_in'] = True
                 session['subscription'] = user.subscription
+                if user.junior == "True":
+                    session['junior'] = True
+                else:
+                    session['junior'] = False
                 return render_template('index.html', data="Login Successful!")
-            else:
+            else: # If login has failed then forward user back to login page with an error message displayed.
                 return render_template('login.html', data="Login Failed. Please try again!")
         except: # If fails to retreive password hash, display error message.
             return render_template('login.html', data="Critical error. Please contact the webmaster at me@richusx.me")
 
 @app.route('/register', methods=['GET', 'POST'])
-def register():
-    fixSubscription()
-    """Register Form"""
+def register(): # Register Page
+    setSessionVariables()
     if request.method == 'POST':
         data = User.query.filter_by(username = request.form['username']).first()
         if data is None:
@@ -121,8 +127,6 @@ def register():
     return render_template('register.html')
 
 @app.route('/logout')
-def logout():
-    """Logout Form"""
-    session['logged_in'] = False
-    session['subscription'] = 0
+def logout(): # Reset session variables and forward user to homepage
+    resetSessionVariables()
     return redirect('/')

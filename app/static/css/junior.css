@@ -1,0 +1,17 @@
+.navbar-inverse {
+  background-color: #FFF618;
+  border-color: #e2de76;
+}
+
+#bootstrap-overrides a{
+  color: #212121;
+}
+
+.text-muted {
+  color: #212121;
+}
+
+body {
+  background-color: rgba(84, 144, 216, 0.42);
+  font-size: 15px;
+}

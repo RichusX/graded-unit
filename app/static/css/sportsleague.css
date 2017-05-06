@@ -9,6 +9,15 @@ body {
     padding-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 }
 
+.navbar-inverse {
+  background-color: #2035a0;
+  border-color: #20274a;
+}
+
+#bootstrap-overrides a{
+  color: #fff;
+}
+
 .player {
     height: 300px;
     margin-bottom: 40px;
@@ -24,14 +33,6 @@ body {
     margin-top: 5px;
     overflow: hidden;
     border-radius: 5px;
-}
-
-.player .info {
-
-}
-
-.player .info-table {
-
 }
 
 .img-portfolio {
@@ -89,7 +90,7 @@ header.carousel .fill {
 /* Footer Styles */
 
 footer {
-    margin: 50px 0;
+    margin: 25px 0;
 }
 
 /* Responsive Styles */

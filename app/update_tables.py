@@ -1,5 +1,3 @@
-#!../flask/bin/python
-
 import os
 import time
 import urllib
@@ -84,7 +82,7 @@ def mergeHTML():
 
     tm.write("{% extends \"base.html\" %} {% block content %}\n")
 
-    tm.write("<br><h2>Championship League</h2>")
+    tm.write("{% if session.logged_in %}\n<br><h2>Championship League</h2>")
     for line in t1.readlines():
         tm.write(line)
     t1.close()
@@ -97,6 +95,7 @@ def mergeHTML():
         tm.write(line)
     t3.close()
     tm.write("<br>Last Updated: %s<br><i>Tables get updated automatically every 2 hours</i>{%% endblock %%}" % (timestamp))
+    tm.write("{% elseif %}\n<br><div class="alert alert-danger"><strong>Access Denied.</strong> You must be logged in to view this page.</div>{% endif %}")
     tm.close()
 
 
