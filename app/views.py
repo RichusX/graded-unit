@@ -113,11 +113,11 @@ def register(): # Register Page
         data = User.query.filter_by(username = request.form['username']).first()
         if data is None:
             pw_hash = auth.salt_pw(request.form['password'])
-            try: # If junior checkbox is not ticked then write to db junior = False
+            try: # If junior checkbox is not ticked then write to db junior = True
                 junior = request.form['junior']
                 if junior is not None:
                     new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = pw_hash, subscription = request.form['subscription'], junior = "True")
-            except: # Else write to db that junior = True
+            except: # Else write to db that junior = False
                 new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = pw_hash, subscription = request.form['subscription'], junior = "False")
             db.session.add(new_user)
             db.session.commit()
