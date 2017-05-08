@@ -116,9 +116,13 @@ def register(): # Register Page
             try: # If junior checkbox is not ticked then write to db junior = True
                 junior = request.form['junior']
                 if junior is not None:
-                    new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = pw_hash, subscription = request.form['subscription'], junior = "True")
-            except: # Else write to db that junior = False
-                new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = pw_hash, subscription = request.form['subscription'], junior = "False")
+                    junior = "True"
+            except:
+                junior = "False"
+            try:
+                new_user = User(fullname = request.form['fullname'], email = request.form['email'], username = request.form['username'], password = pw_hash, subscription = request.form['subscription'], junior = junior)
+            except:
+                return render_template('register.html', data="Error. Please fill in all the fields and try again.")
             db.session.add(new_user)
             db.session.commit()
             return redirect('/login')
