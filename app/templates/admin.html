@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="col-lg-12">
+  <div class="row">
+    {% if msg %}
+      <div style="margin-top: 30px;" class="alert alert-info">{{msg}}</div>
+    {% endif %}
+    <h1 class="page-header">Admin Panel</h1>
+  </div>
+  <div class="row">
+    <div id="tabs" >
+      <ul class="nav nav-tabs">
+    		<li class="active"><a href="#1" data-toggle="tab"><i class="fa fa-table" aria-hidden="true"></i> League Tables</a></li>
+    		<li><a href="#2" data-toggle="tab"><i class="fa fa-info" aria-hidden="true"></i> Player Information</a></li>
+    		<li><a href="#3" data-toggle="tab"><i class="fa fa-users" aria-hidden="true"></i> Users</a></li>
+    	</ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="1">
+          <form class="form-horizontal" action="" method="POST" name="action">
+            <fieldset>
+                  <input type="hidden" name="action" value="reload_tables" id="action"/>
+      						<p style="font-size: 1.5em; margin-top: 20px;">Get fresh data for League Tables from BBC Sports <button type="submit" value="submit" class="btn btn-success" aria-label="">Refresh Tables</button></p>
+            </fieldset>
+          </form>
+        </div>
+      	<div class="tab-pane" id="2">
+          <h3 class="page-header">Add player</h3>
+          <form class="form-horizontal" action="" method="POST" name="action">
+            <fieldset>
+              <div class="col-lg-8">
+                <div class="form-group">
+        					<label for="fullname" class="control-label col-sm-2">Full name</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="fullname" placeholder="John Doe" name="fullname" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="number" class="control-label col-sm-2">Number</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="number" placeholder="25" name="number" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="dob" class="control-label col-sm-2">Date of Birth</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="dob" name="dob" placeholder="yyyy-mm-dd" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="info" class="control-label col-sm-2">Info</label>
+        					<div class="col-sm-8">
+                    <textarea class="form-control" rows="5" id="info" name="info" required=""></textarea>
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="sponsor" class="control-label col-sm-2">Sponsor</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="sponsor" placeholder="If none then type - n/a" name="sponsor" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="previousclub" class="control-label col-sm-2">Previous Club</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="previousclub" placeholder="If none then type - n/a" name="previousclub" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="yearsigned" class="control-label col-sm-2">Year Signed</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="yearsigned" placeholder="2012" name="yearsigned" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="position" class="control-label col-sm-2">Position</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="position" placeholder="Midfielder" name="position" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="imageurl" class="control-label col-sm-2">Image Filename</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="imageurl" placeholder="jonh-doe.jpg" name="imageurl" required="">
+        					</div>
+        				</div>
+                <input type="hidden" name="action" value="add_player" id="action"/>
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4">
+					        <button type="submit" value="submit" class="btn btn-success" aria-label="">Add player</button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+          <h3 class="page-header">Remove player</h3>
+          <form class="form-horizontal" action="" method="POST" name="action">
+            <fieldset>
+              <div class="col-lg-3">
+                <select class="form-control" name="player">
+                  {% for player in players %}
+                    <option value="{{player.id}}">{{player.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-lg-3">
+                <input type="hidden" name="action" value="remove_player" id="action"/>
+      		      <button type="submit" value="submit" class="btn btn-danger" aria-label="">Remove</button>
+              </div>
+            </fieldset>
+          </form>
+      	</div>
+        <div class="tab-pane" id="3">
+          <h3 class="page-header">Users</h3>
+            <input type="hidden" name="action" value="remove_user" id="action"/>
+            <table border="1" class="table table-bordered">
+              <thread>
+                <tr style="text-align: right;">
+                  <th>ID</th>
+                  <th>Full Name</th>
+                  <th>E-Mail</th>
+                  <th>Username</th>
+                  <th>Subscription</th>
+                  <th>Junior</th>
+                  <th>Admin</th>
+                  <th>Actions</th>
+                </tr>
+              </thread>
+              <tbody>
+                {% for user in users %}
+                  <tr>
+                    <td>{{user.id}}</td>
+                    <td>{{user.fullname}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.subscription}}</td>
+                    <td>{{user.junior}}</td>
+                    <td>{{user.admin}}</td>
+                    <td>
+                      <form class="form-horizontal" action="" method="POST" name="action">
+                        <fieldset>
+                          <input type="hidden" name="action" value="remove_user" id="action"/>
+                          <input type="hidden" name="user" value="{{user.id}}" id="user"/>
+                          <button type="submit" value="submit" class="btn btn-danger" aria-label=""><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        </fieldset>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+      	</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

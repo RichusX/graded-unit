@@ -1,69 +1,69 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">Player Information</h1>
-    </div>
+
+<div class="col-lg-12">
+  <div class="row">
+    <h1 class="page-header">Player Information</h1>
+  </div>
 </div>
-<div class="row">
-    {% if session.logged_in %}
-        {% if session.subscription != 0 %} <!-- If user is subscribed then display player stats -->
-            {% for player in data %} <!-- Iterate through the object we passed in from database and display the data-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h3>{{player.name}}</h3>
-                        <div class="well player">
-                            <div class="col-lg-2 photo">
-                                <img src="/static/images/players/{{player.imageurl}}">
-                            </div>
-                            <div class="col-lg-4 info-table">
-                                <table class="table table-condensed">
+{% if session.logged_in %}
+    {% if session.subscription != 0 %} <!-- If user is subscribed then display player stats -->
+        {% for player in data %} <!-- Iterate through the object we passed in from database and display the data-->
+          <div class="col-lg-12">
+            <div class="row">
+                    <h3>{{player.name}}</h3>
+                    <div class="well player">
+                        <div class="col-lg-2 photo">
+                            <img src="/static/images/players/{{player.imageurl}}">
+                        </div>
+                        <div class="col-lg-4 info-table">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <th scope="row" style="border-top: 0;">Date of Birth</th>
+                                    <td style="border-top: 0;">{{player.dob}}</td>
+                                </tr>
+                                {% if player.number != 0 %}
                                     <tr>
-                                        <th scope="row" style="border-top: 0;">Date of Birth</th>
-                                        <td style="border-top: 0;">{{player.dob}}</td>
+                                        <th scope="row">Number</th>
+                                        <td>{{player.number}}</td>
                                     </tr>
-                                    {% if player.number != 0 %}
-                                        <tr>
-                                            <th scope="row">Number</th>
-                                            <td>{{player.number}}</td>
-                                        </tr>
-                                    {% endif %}
+                                {% endif %}
+                                <tr>
+                                    <th scope="row">Position</th>
+                                    <td>{{player.position}}</td>
+                                </tr>
+                                {% if player.yearsigned != 0 %}
                                     <tr>
-                                        <th scope="row">Position</th>
-                                        <td>{{player.position}}</td>
+                                        <th scope="row">Year Signed</th>
+                                        <td>{{player.yearsigned}}</td>
                                     </tr>
-                                    {% if player.yearsigned != 0 %}
-                                        <tr>
-                                            <th scope="row">Year Signed</th>
-                                            <td>{{player.yearsigned}}</td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if player.previousclub != "n/a" %}
+                                {% endif %}
+                                {% if player.previousclub != "n/a" %}
+                                <tr>
+                                    <th scope="row">Previous Club</th>
+                                    <td>{{player.previousclub}}</td>
+                                </tr>
+                                {% endif %}
+                                {% if player.sponsor != "n/a" %}
                                     <tr>
-                                        <th scope="row">Previous Club</th>
-                                        <td>{{player.previousclub}}</td>
+                                        <th scope="row">Sponsor</th>
+                                        <td>{{player.sponsor}}</td>
                                     </tr>
-                                    {% endif %}
-                                    {% if player.sponsor != "n/a" %}
-                                        <tr>
-                                            <th scope="row">Sponsor</th>
-                                            <td>{{player.sponsor}}</td>
-                                        </tr>
-                                    {% endif %}
-                                </table>
-                            </div>
-                            <div class="col-lg-6 info">
-                                <h3 style="margin-left: 0; margin-top: 0;">About</h3>
-                                {{player.info}}
-                            </div>
+                                {% endif %}
+                            </table>
+                        </div>
+                        <div class="col-lg-6 info">
+                            <h3 style="margin-left: 0; margin-top: 0;">About</h3>
+                            {{player.info}}
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% else %}
-        <br><div class="alert alert-danger"><strong>Access Denied.</strong> You must be logged in to view this page.</div>
+                  </div>
+            </div>
+        {% endfor %}
     {% endif %}
+{% else %}
+    <br><div class="alert alert-danger"><strong>Access Denied.</strong> You must be logged in to view this page.</div>
+{% endif %}
 </div>
 {% endblock %}
