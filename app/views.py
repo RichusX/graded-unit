@@ -146,7 +146,6 @@ def login(): # Login Page
         try: # Try to retreive password hash
             username = request.form['username']
             user = User.query.filter_by(username = username).first()
-            print (user.password)
             if auth.check_pw(request.form['password'], user.password): # If login is successful, set session variables and forward user to homepage
                 session['logged_in'] = True
                 session['subscription'] = user.subscription
