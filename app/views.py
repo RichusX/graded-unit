@@ -27,6 +27,18 @@ class User(db.Model):
         self.junior = junior
         self.admin = admin
 
+class News(db.Model):
+    __tablename__ = 'news'
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String())
+    author = db.Column(db.String())
+    text = db.Column(db.String())
+
+    def __init__(self, title, author, text):
+        self.title = title
+        self.author = author
+        self.text = text
+
 class Player(db.Model):
     __tablename__ = 'players'
     id = db.Column(db.Integer, primary_key = True)
@@ -81,6 +93,12 @@ def index(): # Index page (Homepage)
             return render_template('index.html')
     return render_template('index.html')
 
+@app.route('/news')
+def news():
+    setSessionVariables()
+    news = News.query.all()
+    return render_template('news.html', news = news)
+
 @app.route('/tables')
 def tables(): # Championship Table page
     setSessionVariables()
@@ -99,7 +117,8 @@ def admin():
         if request.method == 'GET':
             players = Player.query.all()
             users = User.query.all()
-            return render_template('admin.html', players=players, users=users)
+            news = News.query.all()
+            return render_template('admin.html', players=players, users=users, news=news)
         if request.method == 'POST':
             try:
                 action = request.form['action']
@@ -129,6 +148,21 @@ def admin():
                         return render_template('admin.html', msg=Markup("User with id <strong>%s</strong> removed!" % (request.form['user'])))
                     except:
                         return render_template('admin.html', msg=Markup("User with id %s <strong>NOT</strong> removed!" % (request.form['user'])))
+                elif action == 'add_article':
+                    try:
+                        new_article = News(title = request.form['title'], author = session['fullname'], text = request.form['text'])
+                        db.session.add(new_article)
+                        db.session.commit()
+                        return render_template('admin.html', msg=Markup("Article <strong>'%s'</strong> added!" % (request.form['title'])))
+                    except:
+                        return render_template('admin.html', msg=Markup("Article '%s' <strong>NOT</strong> added!" % (request.form['title'])))
+                elif action == 'remove_article':
+                    try:
+                        News.query.filter_by(id = int(request.form['article'])).delete()
+                        db.session.commit()
+                        return render_template('admin.html', msg=Markup("Article with id <strong>%s</strong> removed!" % (request.form['article'])))
+                    except:
+                        return render_template('admin.html', msg=Markup("Article with id %s <strong>NOT</strong> removed!" % (request.form['article'])))
             except:
                 return Response('No action', 200)
     else:

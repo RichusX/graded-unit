@@ -14,6 +14,7 @@
     		<li class="active"><a href="#1" data-toggle="tab"><i class="fa fa-table" aria-hidden="true"></i> League Tables</a></li>
     		<li><a href="#2" data-toggle="tab"><i class="fa fa-info" aria-hidden="true"></i> Player Information</a></li>
     		<li><a href="#3" data-toggle="tab"><i class="fa fa-users" aria-hidden="true"></i> Users</a></li>
+        <li><a href="#4" data-toggle="tab"><i class="fa fa-newspaper-o" aria-hidden="true"></i> News</a></li>
     	</ul>
       <div class="tab-content">
         <div class="tab-pane active" id="1">
@@ -148,6 +149,49 @@
               </tbody>
             </table>
       	</div>
+        <div class="tab-pane" id="4">
+          <h3 class="page-header">Add article</h3>
+          <form class="form-horizontal" action="" method="POST" name="action">
+            <fieldset>
+              <div class="col-lg-8">
+                <div class="form-group">
+        					<label for="title" class="control-label col-sm-2">Title</label>
+        					<div class="col-sm-8">
+        						<input type="text" class="form-control" id="title" name="title" required="">
+        					</div>
+        				</div>
+                <div class="form-group">
+        					<label for="text" class="control-label col-sm-2">Text</label>
+        					<div class="col-sm-8">
+                    <textarea class="form-control" rows="10" id="text" name="text" required=""></textarea>
+        					</div>
+        				</div>
+                <input type="hidden" name="action" value="add_article" id="action"/>
+                <input type="hidden" name="author" value="{{session.fullname}}" id="author"/>
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4">
+					        <button type="submit" value="submit" class="btn btn-success" aria-label="">Submit article</button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+          <h3 class="page-header">Delete article</h3>
+          <form class="form-horizontal" action="" method="POST" name="action">
+            <fieldset>
+              <div class="col-lg-3">
+                <select class="form-control" name="article">
+                  {% for article in news %}
+                    <option value="{{article.id}}">{{article.title}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-lg-3">
+                <input type="hidden" name="action" value="remove_article" id="action"/>
+      		      <button type="submit" value="submit" class="btn btn-danger" aria-label="">Remove</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
       </div>
     </div>
   </div>
