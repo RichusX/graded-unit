@@ -85,12 +85,6 @@ def resetSessionVariables():
 @app.route('/index')
 def index(): # Index page (Homepage)
     setSessionVariables()
-    if not session.get('logged_in'):
-        return render_template('index.html')
-    else:
-        if request.method == 'POST':
-            username = getname(request.form['username'])
-            return render_template('index.html')
     return render_template('index.html')
 
 @app.route('/news')
