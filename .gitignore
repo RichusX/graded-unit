@@ -1,4 +1,4 @@
-tables/*
+app/tables/*
 sessions/*
 *.pyc
 flask/*
