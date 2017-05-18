@@ -4,8 +4,8 @@
   <div class="row">
     <h1 class="page-header">News</h1>
   </div>
-  {% for article in news|sort(reverse = True) %}
-    <div class="row-fluid">
+  {% for article in news %}
+    <div class="row-fluid" style="margin-bottom: 50px;">
       <h3 style="margin-bottom: 0;">{{article.title}}</h3>
       By <a>{{article.author}}</a>
       <div class="well" style="margin-top: 10px;">
